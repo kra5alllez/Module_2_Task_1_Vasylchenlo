@@ -7,32 +7,33 @@ namespace Logger_Vasylchenko
     {
         private readonly int _minRandomAction = 1;
         private readonly int _maxRandomAction = 4;
-        private Actions _objectOfTypeActions = new Actions();
-        private Logger _logger = Logger.Instance();
+        private readonly Random _random = new Random();
+        private readonly Actions _actions = new Actions();
+        private readonly Logger _logger = Logger.Instance();
 
         public void Run()
         {
-            Result valuesFromMethodsOfClassActions = new Result();
-
-            for (int i = 1; i <= 100; i++)
+            for (var i = 1; i <= 100; i++)
             {
-                var randomLog = new Random().Next(_minRandomAction, _maxRandomAction);
+                Result result = new Result();
+
+                var randomLog = _random.Next(_minRandomAction, _maxRandomAction);
                 switch (randomLog)
                 {
                     case 1:
-                        valuesFromMethodsOfClassActions.Status = _objectOfTypeActions.CreateInfo();
+                        result.Status = _actions.CreateInfo();
                         break;
                     case 2:
-                        valuesFromMethodsOfClassActions.Status = _objectOfTypeActions.CreateWarning();
+                        result.Status = _actions.CreateWarning();
                         break;
                     case 3:
-                        (valuesFromMethodsOfClassActions.Status, valuesFromMethodsOfClassActions.MessageAboutStatus) = _objectOfTypeActions.CreateError();
+                        (result.Status, result.MessageAboutStatus) = _actions.CreateError();
                         break;
                 }
 
-                if (!valuesFromMethodsOfClassActions.Status)
+                if (!result.Status)
                 {
-                    _logger.Write($"{DateTime.UtcNow}: {TypeLog.Error} Action failed by a reason:: {valuesFromMethodsOfClassActions.MessageAboutStatus}");
+                    _logger.Write($"{DateTime.UtcNow}: {TypeLog.Error} Action failed by a reason:: {result.MessageAboutStatus}");
                 }
             }
 
